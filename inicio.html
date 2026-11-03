@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Tela do Jogo</title>
+    <style>
+        
+        body {
+            background-image: url('img/lula.jpg');
+            margin: 0;
+            padding: 0;
+            background-color: #af5353;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .caixa-principal {
+            background: rgba(255, 71, 71, 0.35);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            width: 500px;
+            max-width:500px;
+            padding: 20px 4px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .titulo {
+            color: #ffffff;
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            margin: 0 0 40px 0;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .botao-jogar {
+            background-color: #ffffff;
+            color: #ff3b5b;
+            font-size: 1.8rem;
+            font-weight: bold;
+            padding: 15px 50px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            text-decoration: none; 
+            display: inline-block;  
+        }
+
+        .botao-jogar:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="caixa-principal">
+        <h1 class="titulo">TENTE escapar pro lula</h1>
+        <a href="jogar.html" class="botao-jogar">Jogar</a>
+    </div>
+
+</body>
+</html>
