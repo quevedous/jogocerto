@@ -1,608 +1,157 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Escape Project - O Cativeiro Subterrâneo</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Special+Elite&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jogar · O Mistério da Cozinha Clandestina</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+:root{
+  --escuro:#1a110d;
+  --madeira-escura:#2C221E;
+  --papel:#FDF6E2;
+  --tomate:#D9534F;
+  --latao:#E6B800;
+  --titulo:'Press Start 2P',monospace;
+  --texto:'VT323',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+ background:var(--escuro) url('IMG/fundo.jpg') center/cover no-repeat fixed;
+  color:var(--papel);
+  font-family:var(--texto);
+  font-size:1.5rem;
+  line-height:1.3;
+  image-rendering:pixelated;
+  overflow:hidden;
+}
+:focus-visible{outline:4px solid var(--latao);outline-offset:4px}
+
+.escurecer{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(180deg,rgba(26,17,13,.55),rgba(26,17,13,.8));
+}
+
+.voltar{
+  position:fixed;
+  top:20px;
+  left:20px;
+  z-index:3;
+  display:inline-block;
+  padding:12px 16px;
+  background:var(--escuro);
+  border:4px solid var(--latao);
+  color:var(--latao);
+  text-decoration:none;
+  font-family:var(--titulo);
+  font-size:.65rem;
+  line-height:1.4;
+  box-shadow:6px 6px 0 0 rgba(0,0,0,.6);
+}
+.voltar:hover{background:var(--latao);color:var(--escuro)}
+.voltar:active{transform:translate(4px,4px);box-shadow:none}
+
+.tela{
+  position:relative;
+  z-index:2;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  align-content:center;
+  gap:48px;
+  padding:80px 20px 40px;
+  text-align:center;
+}
+.tela[hidden]{display:none}
+
+.titulo{
+  font-family:var(--titulo);
+  font-weight:400;
+  font-size:clamp(1.3rem,5.5vw,3rem);
+  line-height:1.7;
+  max-width:18ch;
+  color:var(--papel);
+  text-shadow:
+    4px 4px 0 var(--tomate),
+    8px 8px 0 var(--escuro);
+}
+.subtitulo{
+  display:block;
+  margin-top:20px;
+  font-family:var(--texto);
+  font-size:clamp(1.4rem,3.5vw,2rem);
+  color:var(--latao);
+  text-shadow:3px 3px 0 var(--escuro);
+}
+
+.btn-iniciar{
+  font-family:var(--titulo);
+  font-size:clamp(.9rem,2.5vw,1.2rem);
+  line-height:1.4;
+  padding:22px 36px;
+  background:var(--tomate);
+  color:var(--papel);
+  border:4px solid var(--escuro);
+  box-shadow:
+    inset -6px -6px 0 0 rgba(0,0,0,.3),
+    inset 6px 6px 0 0 rgba(255,255,255,.25),
+    8px 8px 0 0 var(--escuro);
+  cursor:pointer;
+}
+.btn-iniciar:hover,.btn-iniciar:focus-visible{background:var(--latao);color:var(--escuro)}
+.btn-iniciar:hover::before,.btn-iniciar:focus-visible::before{content:"▶ "}
+.btn-iniciar:active{
+  transform:translate(6px,6px);
+  box-shadow:inset -6px -6px 0 0 rgba(0,0,0,.3),inset 6px 6px 0 0 rgba(255,255,255,.25);
+}
+
+.aviso{
+  max-width:46ch;
+  padding:28px;
+  background:var(--papel);
+  color:var(--madeira-escura);
+  border:4px solid var(--madeira-escura);
+  border-left:16px solid var(--tomate);
+  box-shadow:12px 12px 0 0 rgba(0,0,0,.55);
+}
+.aviso h2{
+  font-family:var(--titulo);
+  font-weight:400;
+  font-size:1rem;
+  line-height:1.6;
+  margin-bottom:12px;
+}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
 </head>
 <body>
-    <style>
+<div class="escurecer"></div>
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+<a class="voltar" href="index.html">← Menu</a>
 
-body {
-  background-color: var(--bg-primary);
-  color: var(--text-main);
-  font-family: var(--font-mono);
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+<main class="tela" id="tela-inicial">
+  <h1 class="titulo">
+    O Mistério da Cozinha Clandestina
+    <span class="subtitulo">Um escape room gastronômico</span>
+  </h1>
+  <button class="btn-iniciar" id="btn-iniciar" type="button">INICIAR</button>
+</main>
 
-.site-header {
-  background-color: var(--bg-secondary);
-  border-bottom: 2px solid var(--border-color);
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo h1 {
-  font-family: var(--font-retro);
-  font-size: 1.8rem;
-  letter-spacing: 2px;
-}
-
-.logo span {
-  color: var(--accent-color);
-}
-
-.main-nav ul {
-  display: flex;
-  list-style: none;
-  gap: 1.5rem;
-}
-
-.main-nav a {
-  color: var(--text-muted);
-  text-decoration: none;
-  text-transform: uppercase;
-  font-size: 0.95rem;
-  transition: color 0.3s;
-}
-
-.main-nav a:hover,
-.main-nav a.active {
-  color: var(--accent-color);
-  border-bottom: 2px solid var(--accent-color);
-}
-.game-container {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: auto 1fr;
-  gap: 1.5rem;
-  max-width: 1200px;
-  width: 95%;
-  margin: 1.5rem auto;
-  flex: 1;
-}
-
-.game-topbar {
-  grid-column: 1 / -1;
-  background-color: var(--bg-secondary);
-  padding: 1rem;
-  border-radius: 6px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid var(--border-color);
-}
-
-.timer-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 1.2rem;
-  color: var(--accent-color);
-}
-
-#game-timer {
-  font-size: 1.8rem;
-  font-weight: bold;
-}
-.viewport {
-  background-color: var(--bg-secondary);
-  border-radius: 6px;
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border: 1px solid var(--border-color);
-  min-height: 450px;
-}
-
-.room-header h2 {
-  font-family: var(--font-retro);
-  color: var(--accent-color);
-  margin-bottom: 0.5rem;
-}
-
-.interactive-area {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin: 2rem 0;
-  justify-content: center;
-}
-
-.interactive-obj {
-  background-color: var(--bg-card);
-  border: 1px solid var(--accent-color);
-  color: var(--text-main);
-  padding: 12px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-family: var(--font-mono);
-  transition: all 0.2s ease;
-}
-
-.interactive-obj:hover {
-  background-color: var(--accent-color);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(217, 4, 41, 0.4);
-}
-
-.room-nav {
-  border-top: 1px solid var(--border-color);
-  padding-top: 1rem;
-}
-
-.nav-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 5px;
-}
-
-.btn-nav {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  color: var(--text-main);
-  padding: 8px 15px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.btn-nav:hover {
-  border-color: var(--text-main);
-}
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.inventory-section, .narrative-log {
-  background-color: var(--bg-secondary);
-  border-radius: 6px;
-  padding: 1rem;
-  border: 1px solid var(--border-color);
-}
-
-.inventory-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-  gap: 10px;
-  margin-top: 1rem;
-  min-height: 80px;
-}
-
-.inventory-item {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  padding: 8px;
-  text-align: center;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  cursor: pointer;
-}
-
-.inventory-item:hover {
-  border-color: var(--accent-color);
-}
-
-.feedback-box {
-  background-color: #000;
-  border: 1px solid var(--border-color);
-  padding: 10px;
-  height: 150px;
-  overflow-y: auto;
-  font-size: 0.85rem;
-  margin-top: 0.5rem;
-}
-
-.log-entry {
-  margin-bottom: 8px;
-  border-bottom: 1px solid #1a1a1a;
-  padding-bottom: 4px;
-}
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-}
-
-.modal-overlay.hidden {
-  display: none;
-}
-
-.modal-content {
-  background: var(--bg-secondary);
-  border: 2px solid var(--accent-color);
-  padding: 1.5rem;
-  width: 90%;
-  max-width: 600px;
-  border-radius: 6px;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 0.5rem;
-}
-
-.btn-close {
-  background: none;
-  border: none;
-  color: var(--text-main);
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.site-footer {
-  text-align: center;
-  padding: 1rem;
-  background-color: var(--bg-secondary);
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  border-top: 1px solid var(--border-color);
-}
-
-@media (max-width: 768px) {
-  .game-container {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
+<section class="tela" id="tela-jogo" hidden>
+  <div class="aviso">
+    <h2>Em construção</h2>
+    <p>O jogo começa aqui. Os cenários, enigmas e o inventário serão ligados nas próximas etapas.</p>
+  </div>
+</section>
 
 <script>
-    class GameObject {
-  constructor({ id, name, description, itemNeeded = null, givesItem = null, onSolve = null }) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-    this.itemNeeded = itemNeeded;
-    this.givesItem = givesItem;
-    this.onSolve = onSolve;
-    this.isSolved = false;
-  }
-
-  interact(game) {
-    if (this.isSolved) {
-      game.notify(`Você já inspecionou completamente o objeto: ${this.name}.`);
-      return;
-    }
-
-    if (this.itemNeeded && !game.state.inventory.includes(this.itemNeeded)) {
-      game.notify(`[${this.name}] ${this.description} (Precisa de: ${this.itemNeeded})`);
-      return;
-    }
-
-    if (this.itemNeeded && game.state.inventory.includes(this.itemNeeded)) {
-      this.isSolved = true;
-      game.notify(`Você usou ${this.itemNeeded} no objeto ${this.name}!`);
-      if (this.onSolve) this.onSolve(game);
-      return;
-    }
-
-    game.notify(`[${this.name}] ${this.description}`);
-    
-    if (this.givesItem) {
-      game.addItem(this.givesItem);
-      this.givesItem = null;
-    }
-
-    if (this.onSolve) this.onSolve(game);
-  }
-}
-
-class EscapeGame {
-  constructor() {
-    this.state = {
-      currentRoom: 'cela',
-      inventory: [],
-      logs: ['Acordou preso em uma cela fria. O tempo está correndo!'],
-      timeRemaining: 300,
-      gameOver: false
-    };
-
-    this.rooms = {
-      cela: {
-        title: "Cela Subterrânea",
-        description: "Paredes de pedra úmidas. Há uma porta pesada de ferro trancada à frente.",
-        connections: ['corredor'],
-        objects: [
-          new GameObject({
-            id: 'colchao',
-            name: 'Colchão Velho',
-            description: 'Um colchão rasgado e mofado. Você encontrou um Grampo de Cabelo preso no tecido!',
-            givesItem: 'Grampo de Cabelo'
-          }),
-          new GameObject({
-            id: 'porta_cela',
-            name: 'Fechadura da Porta',
-            description: 'Uma fechadura simples, mas trancada.',
-            itemNeeded: 'Grampo de Cabelo',
-            onSolve: (game) => {
-              game.notify('Você conseguiu arrombar a fechadura da cela com o grampo!');
-              game.addLog('Acesso liberado para o Corredor Principal.');
-            }
-          })
-        ]
-      },
-      corredor: {
-        title: "Corredor Principal",
-        description: "Um corredor escuro com tubulações expostas. Portas levam à Sala de Controle e ao Depósito.",
-        connections: ['cela', 'controle', 'deposito'],
-        objects: [
-          new GameObject({
-            id: 'painel_eletrico',
-            name: 'Painel Elétrico',
-            description: 'Fios expostos soltando faíscas. A energia da porta de saída depende disto.',
-            itemNeeded: 'Chave de Fenda',
-            onSolve: (game) => {
-              game.notify('Você consertou a fiação! O painel da porta de saída foi energizado.');
-              game.addLog('Energia restaurada na Saída de Emergência.');
-            }
-          })
-        ]
-      },
-      controle: {
-        title: "Sala de Controle",
-        description: "Monitores fora do ar e vários terminais eletrônicos espalhados.",
-        connections: ['corredor'],
-        objects: [
-          new GameObject({
-            id: 'gaveta',
-            name: 'Gaveta da Mesa',
-            description: 'Uma gaveta emperrada. Há uma Chave de Fenda dentro!',
-            givesItem: 'Chave de Fenda'
-          })
-        ]
-      },
-      deposito: {
-        title: "Depósito de Manutenção",
-        description: "Prateleiras desarrumadas cheias de caixas velhas.",
-        connections: ['corredor', 'saida'],
-        objects: [
-          new GameObject({
-            id: 'cofre',
-            name: 'Cofre do Depósito',
-            description: 'Um cofre forte trancado por cartão magnético.',
-            itemNeeded: 'Cartão de Acesso',
-            onSolve: (game) => {
-              game.notify('Cofre aberto! Você encontrou a Chave Mestra da Saída.');
-              game.addItem('Chave Mestra');
-            }
-          })
-        ]
-      },
-      saida: {
-        title: "Saída de Emergência",
-        description: "Uma pesada porta blindada que dá acesso à superfície.",
-        connections: ['deposito'],
-        objects: [
-          new GameObject({
-            id: 'porta_final',
-            name: 'Tranca Blindada',
-            description: 'Requer a Chave Mestra para abrir.',
-            itemNeeded: 'Chave Mestra',
-            onSolve: (game) => {
-              game.endGame(true, "FUGA PERFEITA! Você conseguiu escapar a tempo!");
-            }
-          })
-        ]
-      }
-    };
-
-    this.initDOM();
-    this.startTimer();
-    this.render();
-  }
-
-  initDOM() {
-    this.dom = {
-      timer: document.getElementById('game-timer'),
-      roomTitle: document.getElementById('room-title'),
-      roomDesc: document.getElementById('room-description'),
-      interactiveArea: document.getElementById('interactive-area'),
-      navButtons: document.getElementById('room-navigation-buttons'),
-      inventoryList: document.getElementById('inventory-list'),
-      feedbackBox: document.getElementById('feedback-box'),
-      logModal: document.getElementById('log-modal'),
-      logContent: document.getElementById('log-content'),
-      btnLog: document.getElementById('btn-log'),
-      btnCloseModal: document.getElementById('btn-close-modal')
-    };
-
-    this.dom.btnLog.addEventListener('click', () => this.toggleModal(true));
-    this.dom.btnCloseModal.addEventListener('click', () => this.toggleModal(false));
-
-    this.dom.interactiveArea.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-obj-id]');
-      if (!btn) return;
-      const objId = btn.dataset.objId;
-      const currentRoom = this.rooms[this.state.currentRoom];
-      const obj = currentRoom.objects.find(o => o.id === objId);
-      if (obj) obj.interact(this);
-      this.render();
-    });
-
-    this.dom.navButtons.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-room-id]');
-      if (!btn) return;
-      this.changeRoom(btn.dataset.roomId);
-    });
-  }
-
-  startTimer() {
-    this.timerId = setInterval(() => {
-      if (this.state.gameOver) return;
-      this.state.timeRemaining--;
-
-      const minutes = String(Math.floor(this.state.timeRemaining / 60)).padStart(2, '0');
-      const seconds = String(this.state.timeRemaining % 60).padStart(2, '0');
-      this.dom.timer.textContent = `${minutes}:${seconds}`;
-
-      if (this.state.timeRemaining <= 0) {
-        this.endGame(false, "TEMPO ESGOTADO! O sistema de segurança te capturou.");
-      }
-    }, 1000);
-  }
-
-  changeRoom(roomId) {
-    if (this.state.gameOver) return;
-    this.state.currentRoom = roomId;
-    this.notify(`Você moveu para: ${this.rooms[roomId].title}`);
-    this.render();
-  }
-
-  addItem(item) {
-    if (!this.state.inventory.includes(item)) {
-      this.state.inventory.push(item);
-      this.notify(`Item obtido: ${item}`);
-      this.addLog(`Item adicionado ao inventário: ${item}`);
-    }
-  }
-
-  notify(msg) {
-    this.dom.feedbackBox.insertAdjacentHTML('afterbegin', `<p class="log-entry">> ${msg}</p>`);
-  }
-
-  addLog(logText) {
-    this.state.logs.push(`[${new Date().toLocaleTimeString()}] ${logText}`);
-  }
-
-  toggleModal(show) {
-    if (show) {
-      this.dom.logContent.innerHTML = this.state.logs.map(log => `<p class="log-entry">${log}</p>`).join('');
-      this.dom.logModal.classList.remove('hidden');
-    } else {
-      this.dom.logModal.classList.add('hidden');
-    }
-  }
-
-  endGame(victory, message) {
-    this.state.gameOver = true;
-    clearInterval(this.timerId);
-    alert(message);
-    this.notify(`FIM DE JOGO: ${message}`);
-  }
-
-  render() {
-    const room = this.rooms[this.state.currentRoom];
-
-    this.dom.roomTitle.textContent = room.title;
-    this.dom.roomDesc.textContent = room.description;
-
-    this.dom.interactiveArea.innerHTML = room.objects.map(obj => `
-      <button class="interactive-obj" data-obj-id="${obj.id}">
-        🔍 ${obj.name} ${obj.isSolved ? '✅' : ''}
-      </button>
-    `).join('');
-
-    this.dom.navButtons.innerHTML = room.connections.map(targetId => `
-      <button class="btn-action" data-room-id="${targetId}">
-        Ir para: ${this.rooms[targetId].title}
-      </button>
-    `).join('');
-
-    this.dom.inventoryList.innerHTML = this.state.inventory.length > 0 
-      ? this.state.inventory.map(item => `<div class="inventory-item">${item}</div>`).join('')
-      : `<p class="log-entry">Vazio</p>`;
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  window.game = new EscapeGame();
-});
+  document.getElementById('btn-iniciar').addEventListener('click', () => {
+    window.location.href = 'cenarios/cena1.html';
+  });
 </script>
-  <header class="site-header">
-    <div class="logo">
-      <h1>PROJECT <span>ESCAPE</span></h1>
-    </div>
-    <nav class="main-nav">
-      <ul>
-        <li><a href="index.html" class="active">O Jogo</a></li>
-        <li><a href="HISTORIA.HTML">História</a></li>
-        <li><a href="cenarios.html">Cenários</a></li>
-        <li><a href="itens.html">Itens</a></li>
-        <li><a href="devs.html">Desenvolvedores</a></li>
-        <li><a href="contato.html">Contato</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main class="game-container">
-    <section class="game-topbar" aria-label="Informações de Jogo">
-      <div class="timer-box">
-        <span>TEMPO RESTANTE:</span>
-        <div id="game-timer">05:00</div>
-      </div>
-      <div class="actions-box">
-        <button id="btn-log" class="btn-secondary" onclick="game.toggleLogModal()">📜 Diário de Bordo</button>
-      </div>
-    </section>
-    <section class="viewport" id="viewport">
-      <header class="room-header">
-        <h2 id="room-title">Cela Subterrânea</h2>
-        <p id="room-description">Um local úmido e frio. Paredes descascadas e cheiro de mofo. Há uma porta trancada à frente.</p>
-      </header>
-      <div class="interactive-area" id="interactive-area">
-      </div>
-
-      <nav class="room-nav" aria-label="Navegação de Salas">
-        <span class="nav-label">Mover para:</span>
-        <div id="room-navigation-buttons" class="nav-buttons">
-        </div>
-      </nav>
-    </section>
-    <aside class="sidebar">
-      <section class="inventory-section">
-        <h3>🎒 Inventário</h3>
-        <div id="inventory-list" class="inventory-grid">
-          <p class="empty-msg">Nenhum item coletado.</p>
-        </div>
-      </section>
-
-      <section class="narrative-log">
-        <h3>💬 Mensagens do Sistema</h3>
-        <div id="feedback-box" class="feedback-box">
-          <p class="log-entry">Você acordou em um lugar estranho. Encontre uma forma de escapar!</p>
-        </div>
-      </section>
-    </aside>
-
-  </main>
-  <div id="log-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="log-title">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 id="log-title">📜 Diário de Bordo e Pistas Encontradas</h3>
-        <button class="btn-close" onclick="game.toggleLogModal()">&times;</button>
-      </div>
-      <div id="log-content" class="modal-body">
-      </div>
-    </div>
-  </div>
-  <footer class="site-footer">
-    <p>&copy; 2026 Grupo Escape Room - Todos os direitos reservados. Projeto Acadêmico.</p>
-  </footer>
-
-  <script src="script.js"></script>
 </body>
 </html>
